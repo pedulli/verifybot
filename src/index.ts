@@ -1,6 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, type ButtonInteraction, ButtonStyle, type ChatInputCommandInteraction, Client, Events, GatewayIntentBits, MessageFlags } from 'discord.js'
-//@ts-expect-error because 'sign' is untyped unfortunately
-import { sign } from 'sign'
+import { sign } from './integrity'
 import db from './db'
 
 // ENV Check
@@ -74,7 +73,7 @@ async function handleButton(int: ButtonInteraction) {
 									response_type: 'code',
 									scope: 'email profile',
 									hd: 'g.rit.edu',
-									state: await sign(JSON.stringify({
+									state: sign(JSON.stringify({
 										discord: int.user.id,
 										server: int.guildId
 									}), SIGNING_SECRET)

@@ -1,7 +1,6 @@
-//@ts-expect-error because 'sign' is untyped unfortunately
-import { check } from 'sign'
 import db from './db'
 import { client, SIGNING_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from './'
+import { verify } from './integrity'
 
 // Really basic web server for handling OAuth callback
 
@@ -11,16 +10,14 @@ export const server = Bun.serve({
 		'/': () => new Response('why are you here'),
 		'/api/auth/': async (req: Request) => {
 			const url = new URL(req.url)
-			const payload = url.searchParams.get('state')
+			const signedPayload = url.searchParams.get('state')
 			const code = url.searchParams.get('code')
-			const idValid = await check(payload, SIGNING_SECRET)
-
-			if (!idValid || !code) return new Response('Invalid request')
-
-			const { discord, server } = JSON.parse(payload?.split('.')?.[0] || '{}')
+			const payload = verify(signedPayload || '', SIGNING_SECRET)
+			if (!payload || !code) return new Response('Invalid request')
+			const { discord, server } = JSON.parse(payload || '{}')
+			if (!discord || !server) return new Response('Invalid request')
 
 			const exists = await db.users.discordExists(discord!)
-
 			if (exists) return new Response('Email already verified, you are free to go back to discord :)')
 
 			const tokenRequest = await fetch('https://oauth2.googleapis.com/token', {
@@ -38,7 +35,6 @@ export const server = Bun.serve({
 			})
 
 			const tokenRequestBody = await tokenRequest.json() as { access_token: string }
-
 			if (!tokenRequestBody.access_token) return new Response('Invalid request')
 
 			const infoRequest = await fetch(

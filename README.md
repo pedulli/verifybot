@@ -39,4 +39,3 @@ Use the slash command `/place verification` to get the verification message
 
 # Other things of note
 - Delete the `data.db` file to reset the database
-- Unfortunately the "sign" package isn't typed, perhaps there are alternatives but for now it gets the job done

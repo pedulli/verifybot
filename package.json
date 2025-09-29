@@ -15,7 +15,6 @@
 		"typescript": "^5"
 	},
 	"dependencies": {
-		"discord.js": "^14.22.1",
-		"sign": "^1.0.2"
+		"discord.js": "^14.22.1"
 	}
 }
