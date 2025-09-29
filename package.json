@@ -1,0 +1,21 @@
+{
+	"name": "verifybot",
+	"module": "src/index.ts",
+	"type": "module",
+	"author": "Tristie Pedulli <t@mail.rit.edu>",
+	"license": "MIT",
+	"scripts": {
+		"start": "bun run src",
+		"slash": "bun run src/deployCommands"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"discord.js": "^14.22.1",
+		"sign": "^1.0.2"
+	}
+}
