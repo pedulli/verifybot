@@ -9,7 +9,7 @@ export const {
 	GOOGLE_CLIENT_SECRET = throwEnvErr('GOOGLE_CLIENT_SECRET'),
 	SIGNING_SECRET = crypto.randomUUID(),
 	REDIRECT_URI = "http://localhost:3000/api/auth/"
- } = Bun.env
+} = Bun.env
 
 // Discord Bot Client
 export const client =
@@ -22,7 +22,11 @@ export const client =
 		})
 		.on(Events.InteractionCreate, int => {
 			if (int.isChatInputCommand())
-				handlers.commands[`/${int.commandName} ${int.options.getSubcommand(true)}`.trim()]?.(int)
+				handlers.commands['/' + [
+					int.commandName,
+					int.options.getSubcommandGroup(),
+					int.options.getSubcommand()
+				].filter(Boolean).join(' ')]?.(int)
 			if (int.isButton())
 				handlers.buttons[int.customId]?.(int)
 		})

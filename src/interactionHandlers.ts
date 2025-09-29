@@ -3,11 +3,12 @@ import { GOOGLE_CLIENT_ID, REDIRECT_URI, SIGNING_SECRET } from "."
 import { sign } from "./integrity"
 import db from "./db"
 
-type Commands = Record<any, (int: ChatInputCommandInteraction) => unknown>
-type Buttons = Record<any, (int: ButtonInteraction) => unknown>
+// Handler Type
+type Handler<T> = Record<string, (int: T) => unknown>
 
-export const commands: Commands = {
-	async ['/place verification'](int) {
+// Slash Command Handlers
+export const commands: Handler<ChatInputCommandInteraction> = {
+	async ['/admin place verification'](int) {
 		const response = {
 			content: 'You need to verify your RIT email address to access this server',
 			components: [
@@ -28,17 +29,40 @@ export const commands: Commands = {
 			await reply.delete()
 		}
 		else int.reply(response)
+	},
+	async ['/admin place link'](int) {
+		const label = int.options.getString('label', true)
+		const url = int.options.getString('url', true)
+
+		int.reply({
+			components: [
+				new ActionRowBuilder<ButtonBuilder>()
+					.addComponents([
+						new ButtonBuilder()
+							.setLabel(label)
+							.setStyle(ButtonStyle.Link)
+							.setURL(url)
+					])
+			]
+
+		})
+	},
+	async ['/admin user'](int) {
+		const member = int.options.getUser('user')
+
+		if (!member) return int.reply({ content: 'Cannot find member', flags: MessageFlags.Ephemeral })
+
+		int.reply({ content: 'TODO', flags: MessageFlags.Ephemeral })
 	}
 }
 
-export const buttons: Buttons = {
+// Custom Button Handlers
+export const buttons: Handler<ButtonInteraction> = {
 	async ['verify'](int) {
-		if (await db.users.discordExists(int.user.id)) {
-			return int.reply({
-				content: 'you\'re already verified dawg',
-				flags: [MessageFlags.Ephemeral]
-			})
-		}
+		if (await db.users.discordExists(int.user.id)) return int.reply({
+			content: 'you\'re already verified dawg',
+			flags: [MessageFlags.Ephemeral]
+		})
 		int.reply({
 			components: [
 				new ActionRowBuilder<ButtonBuilder>()
