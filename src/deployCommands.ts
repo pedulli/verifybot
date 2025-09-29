@@ -1,8 +1,12 @@
 import { REST, Routes, SlashCommandBuilder } from "discord.js"
 
 // ENV Shenanigans
-const { DISCORD_TOKEN, DISCORD_CLIENT_ID, DISCORD_GUILD_ID } = process.env
-if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID || !DISCORD_GUILD_ID) throw 'Missing ENV vars'
+const throwEnvErr = (m: string) => { throw 'Missing ENV Variable: ' + m }
+const {
+	DISCORD_TOKEN = throwEnvErr('DISCORD_TOKEN'),
+	DISCORD_CLIENT_ID = throwEnvErr('DISCORD_CLIENT_ID'),
+	DISCORD_GUILD_ID = throwEnvErr('DISCORD_GUILD_ID')
+} = process.env
 
 const { length } = await new REST()
 	.setToken(DISCORD_TOKEN)
