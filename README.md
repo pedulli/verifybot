@@ -2,9 +2,12 @@
 This is a simple discord bot for verifying users as RIT students using Google's SSO
 
 ## Environment Setup
-Firstly, this codebase uses [Bun](https://bun.com) as it's JS/TS runtime. Bun is great for a multitude of reasons but I used it mainly in this case because of it's built in sqlite support and simple web server, as well as auto env var loading. Bun should be easy to install in all environments.
+Firstly, this codebase uses [Bun](https://bun.com) as it's JS/TS runtime. I chose Bun for the following reasons
+- First class Typescript support
+- Automatic environment variable loading
+- Built in and intuitive SQL and webserver apis
 
-After installing Bun, run the following command to install the required dependencies (discord.js and "sign")
+After installing Bun, run the following command to install dependencies
 ```bash
 bun install
 ```
@@ -28,14 +31,12 @@ Awesome, Discord has been set up, It's Googlin' time
 	- Save OAuth Client
 3. Copy your Client ID into `GOOGLE_CLIENT_ID`, and copy your secret into `GOOGLE_CLIENT_SECRET`
 
-## Running it
-Run the following command, and then you should be good to go.
+## Starting Up
+Run the following command to start the bot
 ```bash
 bun start
 ```
-
-## Using it
-Use the slash command `/place verification` to get the verification message
+And then use the command `/admin place verification` to send a verification button that users can use
 
 # Other things of note
 - Delete the `data.db` file to reset the database
